@@ -28,16 +28,34 @@ function loadTasks() {
 
 function createTaskElement(text, id = Date.now().toString()) {
   const task = document.createElement("div");
+  const deleteBtn = document.createElement("button");
+
   task.className = "task";
   task.textContent = text;
   task.dataset.id = id;
   task.draggable = true;
 
+  deleteBtn.className = "delete-btn";
+  deleteBtn.textContent = "❌";
+
   task.addEventListener("dragstart", handleDragStart);
 
   task.addEventListener("dragend", handleDragEnd);
 
+  deleteBtn.addEventListener("click", () => {
+    task.remove();
+    deleteTaskFromStorage(id);
+  });
+
+  task.appendChild(deleteBtn);
+
   return task;
+}
+
+function deleteTaskFromStorage(id) {
+  const tasks = JSON.parse(localStorage.getItem("kanbanTasks")) || [];
+  const updated = task.filter((task) => task.id == id);
+  localStorage.setItem("kanbanTasks", JSON.stringify(updated));
 }
 
 function handleDragStart(e) {
